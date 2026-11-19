@@ -1,0 +1,132 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fan Zone Interactiva | Decades Live Fest</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <style>
+        body { background-color: #111111; color: #ffffff; }
+        .card { background-color: #1c1c1c; border: 1px solid #ffcc00; color: #fff; }
+        .playlist-item { cursor: pointer; transition: background 0.2s; }
+        .playlist-item:hover { background-color: #b3000033 !important; }
+        .activo { background-color: #cc000088 !important; border-left: 4px solid #ffcc00; }
+    </style>
+</head>
+<body class="py-5">
+
+    <div class="container-fluid">
+        <header class="text-center mb-5">
+            <span class="badge bg-warning text-dark">JavaScript en Vivo</span>
+            <h1 class="display-5 fw-bold" style="color: #ffcc00;">FAN ZONE INTERACTIVA</h1>
+            <p class="lead">Práctica de Selectores, Eventos y manipulación del DOM</p>
+        </header>
+
+        <div class="row g-4"> 
+            <!--gutter separación estándar de 1.5rem (24px por defecto) 
+            tanto de manera horizontal como vertical entre los elementos hijos de la fila.-->
+            
+            <!-- EJERCICIO 1: Playlist del Festival -->
+            <div class="col-md-4">
+                <div class="card h-100 p-4">
+                    <h3 class="h5 mb-3" style="color: #ffcc00;">🎵 1. Escenarios (Playlist)</h3>
+                    <p class="small text-secondary">Haz clic en un escenario para cambiar la "Canción Activa" en tiempo real.</p>
+                    <ul class="list-group list-group-flush" id="playlist">
+                        <li class="list-group-item playlist-item bg-dark text-light border-secondary" data-cancion="Todo de Ti - Rauw Alejandro">🔥 Escenario Todo de Ti</li>
+                        <li class="list-group-item playlist-item bg-dark text-light border-secondary" data-cancion="Desesperados - Rauw Alejandro">❤️ Escenario Desesperados</li>
+                        <li class="list-group-item playlist-item bg-dark text-light border-secondary" data-cancion="PUNTO 40 - Rauw Alejandro">🎤 Escenario PUNTO 40</li>
+                        <li class="list-group-item playlist-item bg-dark text-light border-secondary" data-cancion="Party - Bad Bunny"> 📻 Escenario Party</li>
+                        <li class="list-group-item playlist-item bg-dark text-light border-secondary" data-cancion="Q U E V A S H A C E R H O Y - Omar Courtz y De La Rose"> 🎧 Escenario Q U E V A S H A C E R H O Y</li>
+                    </ul>
+                    <div class="mt-4 p-3 bg-dark rounded border border-secondary text-center">
+                        <span class="text-secondary d-block small">REPRODUCIENDO AHORA:</span>
+                        <strong id="cancion-actual" style="color: #ffcc00;">Ninguno seleccionado</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EJERCICIO 2: Contador de Boletos -->
+            <div class="col-md-4">
+                <div class="card h-100 p-4 text-center">
+                    <h3 class="h5 mb-3" style="color: #ffcc00;">🎟️ 2. Compra Express</h3>
+                    <p class="small text-secondary">Selecciona la cantidad de accesos y calcula el total de tu compra al instante.</p>
+                    <div class="my-4">
+                        <span class="fs-4 d-block mb-2">Precio: <strong style="color: #ff3333;">$850 MXN</strong></span>
+                        <div class="d-flex justify-content-center align-items-center gap-3">
+                            <button id="btn-restar" class="btn btn-outline-danger btn-lg fw-bold">-</button>
+                            <span id="cantidad" class="fs-2 fw-bold px-3">1</span>
+                            <button id="btn-sumar" class="btn btn-outline-warning btn-lg fw-bold">+</button>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-dark rounded border border-secondary">
+                        <span class="text-secondary d-block small">TOTAL A PAGAR:</span>
+                        <span class="fs-3 fw-bold" style="color: #ff3333;" id="total">$850 MXN</span>
+                    </div>
+                </div>
+                
+            </div>
+
+            <!-- EJERCICIO 3: El Muro de Peticiones -->
+            <div class="col-md-4">
+                <div class="card h-100 p-4">
+                    <h3 class="h5 mb-3" style="color: #ffcc00;">💬 3. Muro de Peticiones</h3>
+                    <p class="small text-secondary">Escribe que banda o artista no puede faltar en el setlist final.</p>
+                    <div class="mb-3">
+                        <input type="text" id="input-peticion" class="form-control bg-dark text-light border-secondary mb-2" placeholder="Ej. Rauw Alejandro, Bad Bunny...">
+                        <button id="btn-enviar" class="btn btn-danger w-100">Publicar en el Muro</button>
+                    </div>
+                    <div class="overflow-auto" style="max-height: 180px;">
+                        <ul class="list-group" id="muro">
+                            <!-- Aquí se insertarán las peticiones del alumnado -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script JavaScript -->
+    <script src="JS/MIsCRIPT.js"></script>
+</body>
+</html>
+
+
+
+
+// EJ3
+
+// Obtener los elementos del DOM
+const inputPeticion = document.querySelector("#input-peticion");
+const btnEnviar = document.querySelector("#btn-enviar");
+const muro = document.querySelector("#muro");
+
+// Escuchador de eventos
+btnEnviar.addEventListener("click", function() {
+
+    // Obtener el valor del input
+    const nombreArtista = inputPeticion.value.trim();
+
+    // Verificar que no esté vacío
+    if (nombreArtista !== "") {
+
+        // Crear un nuevo elemento
+        const nuevaPeticion = document.createElement("li");
+
+        // Añadir clases de Bootstrap
+        nuevaPeticion.classList.add("list-group-item", "bg-dark", "text-light", "border-secondary");
+
+        // Agregar el nombre del artista
+        nuevaPeticion.textContent = "🎵 " + nombreArtista;
+
+        // Insertar la petición en el muro
+        muro.appendChild(nuevaPeticion);
+
+        // Limpiar el input
+        inputPeticion.value = "";
+
+    } else {
+        alert("Por favor, escribe el nombre de un artista o banda.");
+    }
+
+});
